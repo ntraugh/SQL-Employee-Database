@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2")
-
+require("console.table");
 
 
 const db = mysql.createConnection({
@@ -68,8 +68,11 @@ function init() {
 
 
 
-
-
+const viewDepartments = () => {
+    db.query('SELECT * FROM employees_db', function (err, results) {
+        return console.log(results);
+    });
+}
 
 
 
