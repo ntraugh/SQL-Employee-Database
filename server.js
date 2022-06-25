@@ -4,9 +4,7 @@ require("console.table");
 
 
 const db = mysql.createConnection({
-    host: "localhost",
     user: "root",
-    password: "",
     database: "employees_db"
 })
 
@@ -27,8 +25,8 @@ function init() {
                 "Finished"
             ]
     })
-    .then(function ({ choice }){
-        switch(choice) {
+    .then((answers) => {
+        switch(answers.initialPrompt) {
             case "View all departments":
                 // need to create this function
                 viewDepartments();
@@ -59,25 +57,19 @@ function init() {
                 break;
             default:
                  // need to create this function
-                endPrompt();
+                process.exit();
         }
     })
 }
 
 
-
-
-
 const viewDepartments = () => {
-    db.query('SELECT * FROM employees_db', function (err, results) {
-        return console.log(results);
+    db.query('SELECT * FROM department', function (err, results) {
+        if (err) return console.error(err); 
+        console.table(results);
+        init();
     });
-}
-
-
-
-
-
+};
 
 
 init()
