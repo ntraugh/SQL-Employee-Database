@@ -22,7 +22,7 @@ function init() {
                 "Add a role",
                 "Add an employee",
                 "Update role",
-                "Finished"
+                "Exit"
             ]
     })
     .then((answers) => {
@@ -64,7 +64,19 @@ function init() {
 
 
 const viewDepartments = () => {
+    // adding console log and space here between the question and tables
+    console.log("\nViewing all departments\n")
     db.query('SELECT * FROM department', function (err, results) {
+        if (err) return console.error(err); 
+        console.table(results);
+        init();
+    });
+};
+
+const viewRoles = () => {
+    // adding console log and space here between the question and tables
+    console.log("\nViewing all roles\n")
+    db.query('SELECT * FROM role', function (err, results) {
         if (err) return console.error(err); 
         console.table(results);
         init();
