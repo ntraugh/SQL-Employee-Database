@@ -41,7 +41,6 @@ function init() {
                 viewAllEmployees();
                 break;
             case "Add a department":
-                // need to create this function
                 addDepartment();
                 break;
             case "Add a role":
@@ -115,5 +114,50 @@ const addDepartment = () => {
         });
     })
 };
+const addRole = () => {
+    db.query(`SELECT department.id, department.name, role.salary 
+    FROM employee
+    JOIN role ON employee.role_id = role.id
+    JOIN department ON department.id = role.department_id;`, function (err, results) {
+        if (err) return console.error(err);
+        const newDepartment = results.map(({id, name}) => ({
+            value: id, 
+            name: `${id} ${name}`
+        })) 
+        console.table(results);
+        // need to run new function with prompts for the user to insert their options
+        return newRole(newDepartment);
+    })
+};
+const newRole = (department) => {
+    inquirer.prompt ([{
+        type: "input",
+        message: "New Role: ",
+        name: "title"
+    },
+    {
+        type: "input",
+        message: "New Salary: ",
+        name: "salary"
+    },
+    {
+        type: "input",
+        message: "New Department: ",
+        name: "department",
+        // giving the user the choices of department that we passed into addRole function
+        choices: department
+    },
+    ])
+    .then((response) => {
+        db.query(`INSERT INTO role SET ?`, {
+            title: response.title,
+            salary: response.salary,
+            department_id: response.department
+        }, (err, results) =>{
+            if (err) return console.error(err);
+            return init();
+        })
+    })
 
+}
 
