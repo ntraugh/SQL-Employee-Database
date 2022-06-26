@@ -1,11 +1,15 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql2")
+const mysql = require("mysql2");
 require("console.table");
-
 
 const db = mysql.createConnection({
     user: "root",
     database: "employees_db"
+})
+
+db.connect(function (err) {
+    if (err) return console.error(err);
+    init()
 })
 
 function init() {
@@ -69,28 +73,32 @@ const viewDepartments = () => {
     db.query('SELECT * FROM department', function (err, results) {
         if (err) return console.error(err); 
         console.table(results);
-        init();
+        return init();
     });
 };
 
 const viewRoles = () => {
     // adding console log and space here between the question and tables
     console.log("\nViewing all roles\n")
-    db.query('SELECT * FROM role', function (err, results) {
+    db.query(`SELECT role.id, role.title, role.salary, department.name AS department
+    FROM role
+    LEFT JOIN department ON role.department_id = department.id;`, function (err, results) {
         if (err) return console.error(err); 
         console.table(results);
-        init();
+        return init();
     });
 };
 const viewAllEmployees = () => {
     // adding console log and space here between the question and tables
     console.log("\nViewing all employees\n")
-    db.query('SELECT * FROM employee', function (err, results) {
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary
+    FROM employee
+    LEFT JOIN role ON employee.role_id = role.id
+    LEFT JOIN department ON department.id = role.department_id;`, function (err, results) {
         if (err) return console.error(err); 
         console.table(results);
-        init();
+        return init();
     });
 };
 
 
-init()
