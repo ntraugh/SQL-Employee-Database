@@ -32,15 +32,12 @@ function init() {
     .then((answers) => {
         switch(answers.initialPrompt) {
             case "View all departments":
-                // need to create this function
                 viewDepartments();
                 break;
             case "View all roles":
-                // need to create this function
                 viewRoles();
                 break;
             case "View all employees":
-                // need to create this function
                 viewAllEmployees();
                 break;
             case "Add a department":
@@ -103,13 +100,20 @@ const viewAllEmployees = () => {
     });
 };
 const addDepartment = () => {
-    // adding console log and space here between the question and tables
-    console.log("\nViewing all employees\n")
-    db.query(``, function (err, results) {
-        if (err) return console.error(err); 
-        console.table(results);
-        return init();
-    });
+    // running prompt asking which department they would like to add
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "addDepartment",
+            message: "What department would you like to add?",
+    }])
+    // running our then promise, taking their response and INSERTING it  INTO the department table
+    .then((response) => {
+        db.query(`INSERT INTO department SET ?`, {name: response.addDepartment}, function (err, results) {
+            if (err) return console.error(err); 
+            return init();
+        });
+    })
 };
 
 
