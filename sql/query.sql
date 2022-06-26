@@ -14,5 +14,8 @@ LEFT JOIN employee manager ON manager.id = employee.manager_id;
 SELECT department.id, department.name, role.salary 
 FROM employee
 JOIN role ON employee.role_id = role.id
-JOIN department ON department.id = role.department_id;
+JOIN department ON department.id = role.department_id
 GROUP BY department.id, department.name;
+
+SELECT role.id, role.title, role.salary
+FROM role;

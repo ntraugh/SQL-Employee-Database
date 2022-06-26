@@ -161,4 +161,18 @@ const newRole = (department) => {
     })
 
 }
+const addEmployee = () => {
+    console.log("\nAvailable roles for new employee\n")
+    db.query(`SELECT role.id, role.title, role.salary
+    FROM role;`, function (err, results) {
+        if (err) return console.error(err)
+        const role = results.map(({ id, title, salary}) => ({
+            value: id,
+            title: `${title}`,
+            salary: `${salary}`
+        }))
+        console.table(results)
+    })
+
+}
 
