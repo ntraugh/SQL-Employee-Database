@@ -91,10 +91,21 @@ const viewRoles = () => {
 const viewAllEmployees = () => {
     // adding console log and space here between the question and tables
     console.log("\nViewing all employees\n")
-    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary,
+    CONCAT(manager.first_name, " ", manager.last_name) AS manager
     FROM employee
     LEFT JOIN role ON employee.role_id = role.id
-    LEFT JOIN department ON department.id = role.department_id;`, function (err, results) {
+    LEFT JOIN department ON department.id = role.department_id
+    LEFT JOIN employee manager ON manager.id = employee.manager_id;`, function (err, results) {
+        if (err) return console.error(err); 
+        console.table(results);
+        return init();
+    });
+};
+const addDepartment = () => {
+    // adding console log and space here between the question and tables
+    console.log("\nViewing all employees\n")
+    db.query(``, function (err, results) {
         if (err) return console.error(err); 
         console.table(results);
         return init();
