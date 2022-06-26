@@ -118,7 +118,8 @@ const addRole = () => {
     db.query(`SELECT department.id, department.name, role.salary 
     FROM employee
     JOIN role ON employee.role_id = role.id
-    JOIN department ON department.id = role.department_id;`, function (err, results) {
+    JOIN department ON department.id = role.department_id
+    GROUP BY department.id, department.name;`, function (err, results) {
         if (err) return console.error(err);
         const newDepartment = results.map(({id, name}) => ({
             value: id, 
@@ -141,7 +142,7 @@ const newRole = (department) => {
         name: "salary"
     },
     {
-        type: "input",
+        type: "list",
         message: "New Department: ",
         name: "department",
         // giving the user the choices of department that we passed into addRole function
