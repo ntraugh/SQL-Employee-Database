@@ -82,6 +82,15 @@ const viewRoles = () => {
         init();
     });
 };
+const viewAllEmployees = () => {
+    // adding console log and space here between the question and tables
+    console.log("\nViewing all employees\n")
+    db.query('SELECT * FROM employee', function (err, results) {
+        if (err) return console.error(err); 
+        console.table(results);
+        init();
+    });
+};
 
 
 init()
