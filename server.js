@@ -172,7 +172,37 @@ const addEmployee = () => {
             salary: `${salary}`
         }))
         console.table(results)
+        // inquirer won't work here need to run in new function
+        addEmployeeInfo(role)
     })
-
 }
-
+const addEmployeeInfo = (role) => {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "firstName",
+            message: "Employees first name: "
+        },
+        {
+            type: "input",
+            name: "lastName",
+            message: "Employees last name: "
+        },
+        {
+            type: "list",
+            name: "employeeRole",
+            message: "Employees role: ",
+            choices: role
+        }
+    ])
+    .then((response) =>{
+        db.query(`INSERT INTO employee SET ?`, {
+            first_name: response.firstName,
+            last_name: response.lastName,
+            role_id: response.employeeRole 
+        }, (err, results) => {
+            if (err) return console.error(err)
+            return init()
+        })
+    })
+}
