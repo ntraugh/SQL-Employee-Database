@@ -51,7 +51,7 @@ function init() {
                 break;
             case "Update role":
                     // need to create this function
-                updateRole();
+                getEmployeeRole();
                 break;
             default:
                 process.exit();
@@ -204,15 +204,14 @@ const addEmployeeInfo = (role) => {
     })
 }
 
-getEmployeeRole = () => {
-    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, 
-    CONCAT(manager.first_name, " ", manager.last_name) AS manager
+const getEmployeeRole = () => {
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary
     FROM employee
     JOIN role ON employee.role_id = role.id
     JOIN department ON department.id = role.department_id
     JOIN employee manager ON manager.id = employee.manager_id;`, (err, results) => {
         if (err) console.error(err)
-        const employee = res.map(({ id, first_name, last_name}) => ({
+        const employee = results.map(({ id, first_name, last_name}) => ({
             value: id,
             first_name: `${first_name}`,
             last_name: `${last_name}`
