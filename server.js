@@ -44,11 +44,9 @@ function init() {
                 addDepartment();
                 break;
             case "Add a role":
-                // need to create this function
                 addRole();
                 break;  
              case "Add an employee":
-                 // need to create this function
                  addEmployee();
                 break;
             case "Update role":
@@ -56,7 +54,6 @@ function init() {
                 updateRole();
                 break;
             default:
-                 // need to create this function
                 process.exit();
         }
     })
@@ -202,6 +199,60 @@ const addEmployeeInfo = (role) => {
             role_id: response.employeeRole 
         }, (err, results) => {
             if (err) return console.error(err)
+            return init()
+        })
+    })
+}
+
+getEmployeeRole = () => {
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, 
+    CONCAT(manager.first_name, " ", manager.last_name) AS manager
+    FROM employee
+    JOIN role ON employee.role_id = role.id
+    JOIN department ON department.id = role.department_id
+    JOIN employee manager ON manager.id = employee.manager_id;`, (err, results) => {
+        if (err) console.error(err)
+        const employee = res.map(({ id, first_name, last_name}) => ({
+            value: id,
+            first_name: `${first_name}`,
+            last_name: `${last_name}`
+        }))
+        console.table(results)
+        updateRole(employee);
+    })
+}
+const updateRole = (employee) => {
+    db.query(`SELECT role.id, role.title, role.salary
+    FROM role;`, (err, results) => {
+        if (err) console.error(err)
+        const roleChoice = results.map(({ id, title, salary}) => ({
+            value: id, 
+            title: `${title}`,
+            salary: `${salary}`
+        }));
+        console.table(results)
+        // need to create another function taht takes in employee and rolechoices with inquirer prompt
+        getNewRole(employee, roleChoice);
+    })
+}
+const getNewRole = (employee, roleChoice) => {
+    inquirer.prompt ([
+        {
+            type: "list",
+            name: "employee",
+            message: `Which employee would you like to update?`,
+            choices: employee
+        },
+        {
+            type: "list",
+            name: "role",
+            message: "Which role would you like to give to this employee?",
+            choices: roleChoice
+        },
+    ])
+    .then((response) => {
+        db.query(`UPDATE employee SET role_id = ? WHERE id = ?;`, [response.role, response.employee], (err, results) => {
+            if (err) console.error(err)
             return init()
         })
     })

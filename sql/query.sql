@@ -19,3 +19,12 @@ GROUP BY department.id, department.name;
 
 SELECT role.id, role.title, role.salary
 FROM role;
+
+SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, 
+CONCAT(manager.first_name, " ", manager.last_name) AS manager
+FROM employee
+JOIN role ON employee.role_id = role.id
+JOIN department ON department.id = role.department_id
+JOIN employee manager ON manager.id = employee.manager_id;
+
+UPDATE employee SET role_id = ? WHERE id = ?;
